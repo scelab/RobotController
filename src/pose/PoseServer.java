@@ -50,25 +50,23 @@ public class PoseServer implements Runnable {
 			try (InputStream is = socket.getInputStream();
 				OutputStream os = socket.getOutputStream()) {
 				ServerIO io = new ServerIO(is, os);
-				while (true) {
-					byte[] data = io.read();
-					String text = new String(data);
-					try {
-						JSONObject obj = new JSONObject(text);
-						int msec = obj.getInt("msec");
-						Map<Byte, Short> map = converter.jsonToMap(obj.getJSONObject("map"));
-						controller.set(msec, map);
-						io.write(String.valueOf(msec).getBytes());
-					} catch (JSONException e) {
-						e.printStackTrace();
-						io.write(String.valueOf(-1).getBytes());
-					}
+				byte[] data = io.read();
+				String text = new String(data);
+				try {
+					JSONObject obj = new JSONObject(text);
+					int msec = obj.getInt("msec");
+					Map<Byte, Short> map = converter.jsonToMap(obj.getJSONObject("map"));
+					controller.set(msec, map);
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
 			} catch (IOException e) {
-				//e.printStackTrace();
-				System.out.println("[LedServer] Client is disconnected.");
+				e.printStackTrace();
+			} finally {
+				try {
+					socket.close();
+				} catch (IOException e) {}
 			}
-
 		}
 	}
 }

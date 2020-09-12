@@ -47,18 +47,18 @@ public class WavServer implements Runnable {
 			try (InputStream is = socket.getInputStream();
 				OutputStream os = socket.getOutputStream()) {
 				ServerIO io = new ServerIO(is, os);
-				while (true) {
-					byte[] data = io.read();
-					System.out.println("data.length="+data.length);
-					Path path = Paths.get("__temp_wav");
-					System.out.println("path="+path);
-					Files.write(path, data);
-					int msec = player.play(path);
-					io.write(String.valueOf(msec).getBytes());
-				}
+				byte[] data = io.read();
+				System.out.println("data.length="+data.length);
+				Path path = Paths.get("__temp_wav");
+				System.out.println("path="+path);
+				Files.write(path, data);
+				player.play(path);
 			} catch (IOException e) {
-				//e.printStackTrace();
-				System.out.println("[WavServer] Client is disconnected.");
+				e.printStackTrace();
+			} finally {
+				try {
+					socket.close();
+				} catch (IOException e) {}
 			}
 		}
 	}
