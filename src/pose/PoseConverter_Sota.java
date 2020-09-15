@@ -74,4 +74,39 @@ public class PoseConverter_Sota implements PoseConverter {
 		}
 		return ret;
 	}
+
+	@Override
+	public JSONObject mapToJson(Map<Byte, Short> map) {
+		JSONObject ret = new JSONObject();
+		for (Byte id : map.keySet()) {
+			int val = map.get(id).intValue();
+			switch (id) {
+			case 1:
+				ret.put("BODY_Y", (int) (val / 10 / REDUCTION_RATIO_BODY_Y));
+				continue;
+			case 2:
+				ret.put("L_SHOU", (int) (val / 10));
+				continue;
+			case 3:
+				ret.put("L_ELBO", (int) (val / 10));
+				continue;
+			case 4:
+				ret.put("R_SHOU", (int) (val / 10));
+				continue;
+			case 5:
+				ret.put("R_ELBO", (int) (val / 10));
+				continue;
+			case 6:
+				ret.put("HEAD_Y", (int) (val / 10 / REDUCTION_RATIO_HEAD_Y));
+				continue;
+			case 7:
+				ret.put("HEAD_P", (int) (val / 10));
+				continue;
+			case 8:
+				ret.put("HEAD_R", (int) (val / 10 / REDUCTION_RATIO_HEAD_R));
+				continue;
+			}
+		}
+		return ret;
+	}
 }

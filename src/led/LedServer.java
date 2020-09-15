@@ -5,24 +5,26 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import main.Data4Q;
 import main.ServerIO;
 
 public class LedServer implements Runnable {
 
 	private final int port;
-	private final LedController controller;
 	private final LedConverter converter;
+	private final BlockingQueue<Data4Q> q;
 
-	public LedServer (int port, LedController controller, LedConverter converter) {
+	public LedServer (int port, LedConverter converter, BlockingQueue<Data4Q> q) {
 		this.port = port;
-		this.controller = controller;
 		this.converter = converter;
+		this.q = q;
 	}
 
 	@Override
@@ -56,7 +58,7 @@ public class LedServer implements Runnable {
 					JSONObject obj = new JSONObject(text);
 					int msec = obj.getInt("msec");
 					Map<Byte, Short> map = converter.jsonToMap(obj.getJSONObject("map"));
-					controller.set(msec, map);
+					q.add(new LedData(msec, map));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

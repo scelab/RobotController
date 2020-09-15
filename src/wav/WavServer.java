@@ -7,19 +7,23 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import main.Data4Q;
 import main.ServerIO;
 
 public class WavServer implements Runnable {
 
 	private final int port;
-	private final SpeechPlayer player;
+	private BlockingQueue<Data4Q> q;
+	private final Object lock;
 
-	public WavServer (int port, SpeechPlayer player) {
+	public WavServer (int port, BlockingQueue<Data4Q> q) {
 		this.port = port;
-		this.player = player;
+		this.q = q;
+		this.lock = new Object();
 	}
 
 	@Override
@@ -48,11 +52,11 @@ public class WavServer implements Runnable {
 				OutputStream os = socket.getOutputStream()) {
 				ServerIO io = new ServerIO(is, os);
 				byte[] data = io.read();
-				System.out.println("data.length="+data.length);
-				Path path = Paths.get("__temp_wav");
-				System.out.println("path="+path);
-				Files.write(path, data);
-				player.play(path);
+				synchronized (lock) {
+					Path path = Paths.get("__temp_wav");
+					Files.write(path, data);
+					q.add(new WavData(path));
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {

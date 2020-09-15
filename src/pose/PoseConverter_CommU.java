@@ -111,4 +111,58 @@ public class PoseConverter_CommU implements PoseConverter {
 		}
 		return ret;
 	}
+
+	@Override
+	public JSONObject mapToJson(Map<Byte, Short> map) {
+		JSONObject ret = new JSONObject();
+		for (Byte id : map.keySet()) {
+			int val = map.get(id).intValue();
+			switch (id) {
+			case 1:
+				ret.put("BODY_P", (int) (val / 10 / REDUCTION_RATIO_BODY_P));
+				continue;
+			case 2:
+				ret.put("BODY_Y", (int) (val / 10));
+				continue;
+			case 3:
+				ret.put("L_SHOU_P", (int) (val / 10 / REDUCTION_RATIO_L_SHOU_P));
+				continue;
+			case 4:
+				ret.put("L_SHOU_R", (int) (val / 10));
+				continue;
+			case 5:
+				ret.put("R_SHOU_P", (int) (val / 10 / REDUCTION_RATIO_R_SHOU_P));
+				continue;
+			case 6:
+				ret.put("R_SHOU_R", (int) (val / 10));
+				continue;
+			case 7:
+				ret.put("HEAD_P", (int) (val / 10));
+				continue;
+			case 8:
+				ret.put("HEAD_R", (int) (val / 10 / REDUCTION_RATIO_HEAD_R));
+				continue;
+			case 9:
+				ret.put("HEAD_Y", (int) (val / 10));
+				continue;
+			case 10:
+				ret.put("EYES_P", (int) (val / 10));
+				continue;
+			case 11:
+				ret.put("L_EYE_Y", (int) (val / 10));
+				continue;
+			case 12:
+				ret.put("R_EYE_Y", (int) (val / 10));
+				continue;
+			case 13:
+				ret.put("EYELID", (int) (val / 10));
+				continue;
+			case 14:
+				ret.put("MOUTH", (int) (val / 10));
+				continue;
+			}
+		}
+		return ret;
+	}
+
 }

@@ -5,24 +5,26 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import main.Data4Q;
 import main.ServerIO;
 
 public class PoseServer implements Runnable {
 
 	private final int port;
-	private final AxisController controller;
 	private final PoseConverter converter;
+	private final BlockingQueue<Data4Q> q;
 
-	public PoseServer (int port, AxisController controller, PoseConverter converter) {
+	public PoseServer (int port, PoseConverter converter, BlockingQueue<Data4Q> q) {
 		this.port = port;
-		this.controller = controller;
 		this.converter = converter;
+		this.q = q;
 	}
 
 	@Override
@@ -56,7 +58,7 @@ public class PoseServer implements Runnable {
 					JSONObject obj = new JSONObject(text);
 					int msec = obj.getInt("msec");
 					Map<Byte, Short> map = converter.jsonToMap(obj.getJSONObject("map"));
-					controller.set(msec, map);
+					q.add(new PoseData(msec, map));
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}

@@ -37,7 +37,7 @@ public class ServoInit {
 			pose.SetPose(poseIds, poseVals);
 			pose.SetTorque(torqueIds, torqueVals);
 			pose.SetLed(ledIds, ledVals);
-			motion.play(pose, 1500, "RobotController");
+			motion.play(pose, 1500);
 			CRobotUtil.wait(1500);
 			return motion;
 		}
@@ -65,7 +65,7 @@ public class ServoInit {
 			pose.SetPose(poseIds, poseVals);
 			pose.SetTorque(torqueIds, torqueVals);
 			pose.SetLed(ledIds, ledVals);
-			motion.play(pose, 1500);
+			motion.play(pose,1500);
 			CRobotUtil.wait(1500);
 			return motion;
 		}
