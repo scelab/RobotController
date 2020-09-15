@@ -12,6 +12,7 @@ public class Params {
 	public static final int wavPort;
 	public static final int posePort;
 	public static final int ledPort;
+	public static final int readPort;
 
 	static {
 		Properties properties = loadProperties("System.properties");
@@ -31,6 +32,10 @@ public class Params {
 		checkNullProperties(strLedPort);
 		checkIntProperties(strLedPort);
 		ledPort = Integer.valueOf(strLedPort);
+		final String strReadPort = properties.getProperty("READ_PORT");
+		checkNullProperties(strReadPort);
+		checkIntProperties(strReadPort);
+		readPort = Integer.valueOf(strReadPort);
 	}
 
 	private static Properties loadProperties(String path) {
