@@ -1,7 +1,7 @@
 # RobotController
 TCP Server for controlling sota and commu.
 
-ビルド済みのjarファイル: https://github.com/scelab/RobotController_bin
+ビルド済みのjarファイル: https://github.com/scelab/RobotController_bin_private
 
 # Java version
 JavaSE-1.8
